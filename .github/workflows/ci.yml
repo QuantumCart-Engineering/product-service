@@ -3,13 +3,14 @@ name: Product Service CI
 on:
   push:
     branches:
-      - main
-      - develop
+      - dev
+      - uat
+      - master
 
   pull_request:
     branches:
-      - main
-      - develop
+      - uat
+      - master
 
 jobs:
   build-and-test:
