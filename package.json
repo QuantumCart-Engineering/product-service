@@ -13,7 +13,8 @@
     "test:integration": "node -r ts-node/register/transpile-only src/scripts/migrate.ts && node ./node_modules/jest/bin/jest.js src/__tests__/integration --runInBand",
     "test:all": "jest",
     "test:coverage": "jest --coverage",
-    "migrate": "ts-node --transpile-only src/scripts/migrate.ts"
+    "migrate": "ts-node --transpile-only src/scripts/migrate.ts",
+    "seed": "ts-node --transpile-only src/scripts/seed.ts"
   },
   "keywords": [],
   "author": "",

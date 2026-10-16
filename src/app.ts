@@ -22,6 +22,11 @@ import {
     errorMiddleware
 } from "./middlewares/error.middleware";
 
+import {
+    createOriginChecker,
+    parseAllowedOrigins
+} from "./middlewares/cors.middleware";
+
 const app: Application = express();
 
 /**
@@ -37,47 +42,19 @@ app.use(
  * Restrict origins through ALLOWED_ORIGINS.
  * Example:
  * ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200
+ *
+ * Disallowed origins are rejected by omitting the CORS headers (see
+ * `createOriginChecker`) rather than by raising, so a browser origin can
+ * never turn a normal request into a 500.
  */
-const allowedOrigins =
-    process.env.ALLOWED_ORIGINS
-        ?.split(",")
-        .map((origin) => origin.trim())
-        .filter(Boolean) ?? [];
-
 app.use(
     cors({
-        origin: (
-            origin,
-            callback
-        ) => {
-            // Allow non-browser requests such as curl/postman.
-            if (!origin) {
-                callback(null, true);
-                return;
-            }
-
-            // Development fallback.
-            if (
-                allowedOrigins.length === 0 &&
-                process.env.NODE_ENV !== "production"
-            ) {
-                callback(null, true);
-                return;
-            }
-
-            if (
-                allowedOrigins.includes(origin)
-            ) {
-                callback(null, true);
-                return;
-            }
-
-            callback(
-                new Error(
-                    "Origin not allowed by CORS"
-                )
-            );
-        }
+        origin: createOriginChecker(
+            parseAllowedOrigins(
+                process.env.ALLOWED_ORIGINS
+            ),
+            process.env.NODE_ENV ?? "development"
+        )
     })
 );
 

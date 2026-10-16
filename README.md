@@ -70,6 +70,8 @@ product-service/
 │   ├── repositories/
 │   ├── routes/
 │   ├── scripts/
+│   │   ├── migrate.ts
+│   │   └── seed.ts
 │   ├── services/
 │   ├── utils/
 │   ├── validators/
@@ -84,3 +86,23 @@ product-service/
 ├── package.json
 ├── tsconfig.json
 └── README.md
+```
+
+---
+
+## Development seed data
+
+The service ships with a small, realistic electronics catalogue for local
+development. It is **opt-in**, **idempotent** and **non-destructive** — it
+upserts categories and products by their unique slug/SKU and never deletes or
+resets existing rows.
+
+```bash
+npm run seed
+```
+
+Run it after the database is migrated (`npm run migrate`) and reachable with the
+credentials in your `.env`. It adds the Mobiles, Laptops, Audio, Accessories,
+Wearables, Cameras, Gaming and Smart Home departments along with a handful of
+products each. It is not invoked automatically and is not part of the container
+startup.
